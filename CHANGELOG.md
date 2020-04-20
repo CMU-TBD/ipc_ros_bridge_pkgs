@@ -1,5 +1,10 @@
 # Change log
 
+## [Unreleased]
+### Fixed
+- Fixed definition/structure files where `std_msgs::Float64` and `std_msgs::Int32` were using pointers in the struct instead of actual value.
+
+
 ## [0.2.0] - 2020-04-17
 ### Changed:
 - Reorganized the packages and made it a meta package.

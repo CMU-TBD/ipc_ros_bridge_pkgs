@@ -15,7 +15,7 @@ public:
     virtual void* constructStructFromMessage(void* _msg){
         std_msgs::Int32 *msg = (std_msgs::Int32 *) _msg;
         std_msgs_int32 *s = new std_msgs_int32();
-        s->Data = &(msg->data);
+        s->Data = msg->data;
         return s;
     }
 
@@ -24,7 +24,7 @@ public:
         std_msgs::Int32 msg;
         // create new message
         std_msgs_int32 *container = (std_msgs_int32 *) _container;
-        msg.data = *(container->Data);
+        msg.data = container->Data;
         return msg;
     }
 };

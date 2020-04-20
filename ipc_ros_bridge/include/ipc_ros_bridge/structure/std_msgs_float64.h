@@ -4,7 +4,7 @@
 // Define the struct here
 typedef struct 
 {
-    double* Data;
+    double Data;
 } std_msgs_float64;
 
 // Define the constants

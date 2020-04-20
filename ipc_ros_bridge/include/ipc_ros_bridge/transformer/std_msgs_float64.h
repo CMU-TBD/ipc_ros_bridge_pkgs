@@ -15,7 +15,7 @@ public:
     virtual void* constructStructFromMessage(void* _msg){
         std_msgs::Float64 *msg = (std_msgs::Float64 *) _msg;
         std_msgs_float64 *s = new std_msgs_float64();
-        s->Data = &(msg->data);
+        s->Data = msg->data;
         return s;
     }
 
@@ -24,7 +24,7 @@ public:
         std_msgs::Float64 msg;
         // create new message
         std_msgs_float64 *container = (std_msgs_float64 *) _container;
-        msg.data = *(container->Data);
+        msg.data = container->Data;
         return msg;
     }
 };
