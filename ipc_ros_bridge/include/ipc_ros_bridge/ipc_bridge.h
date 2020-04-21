@@ -36,7 +36,6 @@ private:
 
 public:
   //Constructors 
-  IPCBridge();
   IPCBridge(ros::NodeHandle _nh, std::string _taskName);
   
   // Deconstructor
@@ -44,6 +43,8 @@ public:
 
   // Non template Methods
   void Connect(ros::NodeHandle _nh, std::string _taskName);
+  void Connect(std::string _taskName);
+  bool isConnected();
   void Disconnect();
   void spin();
   void spin(ros::Duration duration);
@@ -51,6 +52,11 @@ public:
   template <class M, class T>
   void RelayTopicToIPC(std::string ipcMsgName, std::string rosTopicName)
   {
+    if (!connected){
+      ROS_WARN("Attempt to RelayTopicToIPC when IPC is not connected");
+      return;
+    }
+
     // create the intermediate message.
     IntermediateType<M> *t = new T(ipcMsgName);
 
@@ -119,6 +125,11 @@ public:
   void ReceiveTopicFromIPC(std::string ipcMsgName, std::function<void(M, void *)> callback, std::string callbackName,
                            void *arg)
   {
+    if (!connected){
+      ROS_WARN("Attempt to ReceiveTopicFromIPC when IPC is not connected");
+      return;
+    }
+    
     // create intermediate type
     IntermediateType<M> *t = new T(ipcMsgName);
     // define and register message
@@ -139,9 +150,14 @@ public:
     opsMap.insert(std::make_pair(callbackName, (void *)ops));
   }
 
+
   template <class M, class T>
   void RelayTopicFromIPC(std::string ipcMsgName, std::string rosTopicName)
   {
+    if (!connected){
+      ROS_WARN("Attempt to RelayTopicFromIPC when IPC is not connected");
+      return;
+    }
     // create publisher
     ros::Publisher pub = nh.advertise<M>(rosTopicName, 1);
     pubMap.insert(std::make_pair(rosTopicName, pub));
