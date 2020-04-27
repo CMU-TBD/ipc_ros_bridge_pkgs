@@ -65,9 +65,7 @@ public:
 
     // subscribe to the topic
     boost::function<void(const M &)> callback = [=](const M &msg) {
-      auto data = t->constructStructFromMessage((void *)&msg);
-      IPC_publishData(t->getName(), data);
-      free(data);
+        t->publishData((void *)&msg);
     };
     // create the ros subscriber
     auto sub = nh.subscribe<M>(rosTopicName, 1, callback);

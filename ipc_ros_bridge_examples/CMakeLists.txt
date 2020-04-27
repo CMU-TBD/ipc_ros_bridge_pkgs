@@ -164,6 +164,11 @@ target_link_libraries(ipc_send
   ${IPC_LIB_PATH}
 )
 
+add_executable(ipc_receive src/ipc_receive.cpp)
+target_link_libraries(ipc_receive
+  ${catkin_LIBRARIES}
+  ${IPC_LIB_PATH}
+)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

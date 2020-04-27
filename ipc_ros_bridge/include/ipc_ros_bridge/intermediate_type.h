@@ -19,9 +19,12 @@ public:
     }
 
     // For ROS -> IPC
-    virtual void* constructStructFromMessage(void* msg) {};
+    virtual bool constructStructFromMessage(void* msg, void* &ptr) {};
     // For IPC -> ROS
     virtual M ContainerToMessage(void* container) {};
+    
+    // Removed the generate object in construct
+    virtual void publishData(void* msg) {};
 
     char* getName(){
         return &name[0];
@@ -30,4 +33,6 @@ public:
     char* getFormatString(){
         return format;
     }
+
+    
 };
