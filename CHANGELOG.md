@@ -1,6 +1,23 @@
 # Change log
 
 <!-- ## [Unreleased] -->
+
+## Known Issues:
+1. Our implementation does not support the `query/response` design.
+
+## [0.3.0] - 2020-04-28
+#### Added
+- Added definitions for `geometer_msgs::Point`, `geometer_msgs::Quaternion`, and `geometer_msgs::Pose`.
+- Added additional examples for them.
+
+#### Changed
+- [**Breaking**] Changed the way publish work, instead of returning the value, you now call `sendToIPC(void* data)` to send the data. This removed the complexity of managing memory of created items.
+- [**Breaking**] Changed how single element ros messages are converted, instead of a struct, it now just sends the data with no wrappers. This increases the flexibility on the IPC side.
+- Updated all existing definition/structures to match new patterns.
+
+#### Removed
+- Removed `void *` parameter for all callbacks. To pass variables to the callback functions, use `std::bind`.
+
 ## [0.2.1] - 2020-04-21
 #### Added
 - Added method `isConnected` to check if the program is still connected to IPC.

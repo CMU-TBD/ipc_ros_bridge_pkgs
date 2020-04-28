@@ -12,19 +12,17 @@ public:
         :IntermediateType(name, STD_MSGS_FLOAT64_FORMAT){
     }
 
-    virtual void* constructStructFromMessage(void* _msg){
+    virtual void publishData(void* _msg){
         std_msgs::Float64 *msg = (std_msgs::Float64 *) _msg;
-        std_msgs_float64 *s = new std_msgs_float64();
-        s->Data = msg->data;
-        return s;
+        sendToIPC(&(msg->data));
     }
 
     virtual std_msgs::Float64 ContainerToMessage(void* _container)
     {
         std_msgs::Float64 msg;
         // create new message
-        std_msgs_float64 *container = (std_msgs_float64 *) _container;
-        msg.data = container->Data;
+        double* Data = (double*) _container;
+        msg.data = *Data;
         return msg;
     }
 };

@@ -18,13 +18,12 @@ int main()
     IPC_defineMsg(MSGNAME, IPC_VARIABLE_LENGTH, STD_MSGS_STRING_FORMAT);
 
     // create data type
-    std_msgs_string d;
     std::string tmp = "Hello from IPC World";
-    d.Data = &tmp[0];    
-
+    const char *str = tmp.c_str();
+    
     while(true){
         // send the message
-        IPC_publishData(MSGNAME, &d);
+        IPC_publishData(MSGNAME, &str);
         // sleep
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }

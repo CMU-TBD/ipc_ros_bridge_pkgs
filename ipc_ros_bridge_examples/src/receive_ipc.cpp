@@ -7,8 +7,12 @@
 
 
 
-void receiveMsg(std_msgs::String msg, void* arg){
+void receiveMsg(std_msgs::String msg){
     std::cout << "Received:" << msg.data << std::endl;
+}
+
+void receiveMsgBindArg(std_msgs::String msg, std::string info){
+    std::cout << "Received:" << msg.data << "with" << info << std::endl;
 }
 
 int main(int argc, char** argv){
@@ -30,7 +34,10 @@ int main(int argc, char** argv){
     ipc.spin(ros::Duration(5));
 
     std::cout << "Restarting Listening ...." << std::endl;
-    ipc.ReceiveTopicFromIPC<std_msgs::String, StdMsgsString>("ROSMSG1", receiveMsg);
+
+    // Bind examples to pass in variables or other information to the callback function
+    auto cb = std::bind(receiveMsgBindArg, std::placeholders::_1, "info");
+    ipc.ReceiveTopicFromIPC<std_msgs::String, StdMsgsString>("ROSMSG1", cb);
 
     ipc.spin(wait);
     

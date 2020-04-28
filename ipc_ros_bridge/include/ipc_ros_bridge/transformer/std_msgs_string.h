@@ -13,19 +13,18 @@ public:
         :IntermediateType(name, STD_MSGS_STRING_FORMAT){
     }
 
-    virtual void* constructStructFromMessage(void* _msg){
+    virtual void publishData(void* _msg){
         std_msgs::String *msg = (std_msgs::String *) _msg;
-        std_msgs_string *s = new std_msgs_string();
-        s->Data = &(msg->data[0]);
-        return s;
+        const char* cstr = msg->data.c_str();
+        sendToIPC(&cstr);
     }
 
     virtual std_msgs::String ContainerToMessage(void* _container)
     {
         std_msgs::String msg;
         // create new message
-        std_msgs_string *container = (std_msgs_string *) _container;
-        msg.data = container->Data;
+        char ** container = (char **) _container;
+        msg.data = std::string(*container);
         return msg;
     }
 };
