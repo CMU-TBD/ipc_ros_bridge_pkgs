@@ -21,8 +21,8 @@ public:
     {
         std_msgs::Float64 msg;
         // create new message
-        std_msgs_float64 *container = (std_msgs_float64 *) _container;
-        msg.data = container->Data;
+        double* Data = (double*) _container;
+        msg.data = *Data;
         return msg;
     }
 };

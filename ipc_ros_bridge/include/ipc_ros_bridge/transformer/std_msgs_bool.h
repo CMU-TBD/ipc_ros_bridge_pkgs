@@ -23,8 +23,8 @@ public:
     {
         std_msgs::Bool msg;
         // create new message
-        std_msgs_bool *container = (std_msgs_bool *) _container;
-        msg.data = container->Data;
+        int* Data = (int*) _container;
+        msg.data = (*Data == 1 ? true : false); 
         return msg;
     }
 };

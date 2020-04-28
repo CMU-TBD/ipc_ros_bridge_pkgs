@@ -21,8 +21,8 @@ public:
     {
         std_msgs::Int32 msg;
         // create new message
-        std_msgs_int32 *container = (std_msgs_int32 *) _container;
-        msg.data = container->Data;
+        int* Data = (int*) _container;
+        msg.data = *Data;
         return msg;
     }
 };
