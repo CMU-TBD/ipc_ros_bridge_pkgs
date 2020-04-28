@@ -12,18 +12,11 @@ public:
         :IntermediateType(name, STD_MSGS_BOOL_FORMAT){
     }
 
-    virtual bool constructStructFromMessage(void* _msg, void* &ptr){
-        std_msgs::Bool *msg = (std_msgs::Bool *) _msg;
-        std_msgs_bool *s = new std_msgs_bool();
-        s->Data = msg->data ? 1 : 0;
-        ptr = s;
-        return true;
-    }
 
     virtual void publishData(void* _msg){
         std_msgs::Bool *msg = (std_msgs::Bool *) _msg;
         int intBool = msg->data ? 1 : 0;
-        IPC_publishData(getName(), &(intBool));
+        sendToIPC(&(intBool));
     }
 
     virtual std_msgs::Bool ContainerToMessage(void* _container)

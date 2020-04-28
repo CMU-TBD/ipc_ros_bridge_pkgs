@@ -170,6 +170,18 @@ target_link_libraries(ipc_receive
   ${IPC_LIB_PATH}
 )
 
+add_executable(ipc_send_geometry src/ipc_send_geometry.cpp)
+target_link_libraries(ipc_send_geometry
+  ${catkin_LIBRARIES}
+  ${IPC_LIB_PATH}
+)
+
+add_executable(geometry_relay_example src/geometry_relay_example.cpp)
+target_link_libraries(geometry_relay_example
+  ${catkin_LIBRARIES}
+  ${IPC_LIB_PATH}
+)
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use

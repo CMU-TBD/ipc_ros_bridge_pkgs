@@ -12,18 +12,10 @@ public:
         :IntermediateType(name, STD_MSGS_INT32_FORMAT){
     }
 
-    virtual bool constructStructFromMessage(void* _msg, void* &ptr){
-        std_msgs::Int32 *msg = (std_msgs::Int32 *) _msg;
-        std_msgs_int32 *s = new std_msgs_int32();
-        s->Data = msg->data;
-        return true;
-    }
-
     virtual void publishData(void* _msg){
         std_msgs::Int32 *msg = (std_msgs::Int32 *) _msg;
-        IPC_publishData(getName(), &(msg->data));
+        sendToIPC(&(msg->data));
     }
-
 
     virtual std_msgs::Int32 ContainerToMessage(void* _container)
     {

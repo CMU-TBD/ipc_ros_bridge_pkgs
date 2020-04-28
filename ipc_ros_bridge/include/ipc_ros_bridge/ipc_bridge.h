@@ -18,9 +18,8 @@ struct SubOps
 template <typename M>
 struct ReceiveOps
 {
-  std::function<void(M, void *)> callback;
+  std::function<void(M)> callback;
   IntermediateType<M> *t;
-  void *arg;
 };
 
 class IPCBridge
@@ -102,26 +101,13 @@ public:
   }
 
   template <class M, class T>
-  void ReceiveTopicFromIPC(std::string ipcMsgName, std::function<void(M, void *)> callback)
+  void ReceiveTopicFromIPC(std::string ipcMsgName, std::function<void(M)> callback)
   {
-    ReceiveTopicFromIPC<M, T>(ipcMsgName, callback, ipcMsgName, nullptr);
+    ReceiveTopicFromIPC<M, T>(ipcMsgName, callback, ipcMsgName);
   }
 
   template <class M, class T>
-  void ReceiveTopicFromIPC(std::string ipcMsgName, std::function<void(M, void *)> callback, void *arg)
-  {
-    ReceiveTopicFromIPC<M, T>(ipcMsgName, callback, ipcMsgName, arg);
-  }
-
-  template <class M, class T>
-  void ReceiveTopicFromIPC(std::string ipcMsgName, std::function<void(M, void *)> callback, std::string callbackName)
-  {
-    ReceiveTopicFromIPC<M, T>(ipcMsgName, callback, callbackName, nullptr);
-  }
-
-  template <class M, class T>
-  void ReceiveTopicFromIPC(std::string ipcMsgName, std::function<void(M, void *)> callback, std::string callbackName,
-                           void *arg)
+  void ReceiveTopicFromIPC(std::string ipcMsgName, std::function<void(M)> callback, std::string callbackName)
   {
     if (!connected){
       ROS_WARN("Attempt to ReceiveTopicFromIPC when IPC is not connected");
@@ -133,13 +119,10 @@ public:
     // define and register message
     IPC_defineMsg(t->getName(), IPC_VARIABLE_LENGTH, t->getFormatString());
 
-    // pass the
-
     // create the publishing ops
     ReceiveOps<M> *ops = new ReceiveOps<M>();
     ops->t = t;
     ops->callback = callback;
-    ops->arg = arg;
 
     // pass to the static method
     ReceiveTopicFromIPCStatic<M>(ops);
@@ -161,7 +144,7 @@ public:
     pubMap.insert(std::make_pair(rosTopicName, pub));
 
     // create a lambda function that publish it
-    std::function<void(M, void *)> pubCallback = [=](M msg, void *args) {
+    auto pubCallback = [=](M msg) {
       auto result = pubMap.find(rosTopicName);
       auto pub = result->second;
       pub.publish(msg);
@@ -182,10 +165,6 @@ public:
       IPC_unsubscribe(ops->t->getName(), callback<M>);
       // delete/free the instance
       delete ops->t;
-      if (ops->arg != nullptr)
-      {
-        delete ops->arg;
-      }
       opsMap.erase(callbackName);
       delete ops;
       return true;
@@ -217,7 +196,7 @@ public:
   static void callback(MSG_INSTANCE msgRef, BYTE_ARRAY callData, void *clientData)
   {
     ReceiveOps<M> *ops = (ReceiveOps<M> *)clientData;
-    ops->callback(ops->t->ContainerToMessage(callData), ops->arg);
+    ops->callback(ops->t->ContainerToMessage(callData));
     // Free the data
     IPC_freeByteArray(callData);
   }

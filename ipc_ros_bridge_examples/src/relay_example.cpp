@@ -21,7 +21,6 @@ int main(int argc, char** argv){
     // Relay the Message from topic "t" to IPC
     ipc.RelayTopicToIPC<std_msgs::String, StdMsgsString>("IPCMSG1","t"); 
     ipc.RelayTopicToIPC<std_msgs::Float64, StdMsgsFloat64>("IPCMSG2","f"); 
-    ipc.RelayTopicToIPC<std_msgs::Bool, StdMsgsBool>("IPCMSG3","b"); 
 
     std::cout << "Starting Wait ...." << std::endl;
     ros::Duration wait(10);
@@ -31,8 +30,8 @@ int main(int argc, char** argv){
 
     // Stop Mesage
     ipc.StopReceiveTopicFromIPC<std_msgs::String>("fromIPC");
-    // ipc.StopRelayTopicFromIPC<std_msgs::String>("fromIPC");
     ipc.StopRelayTopicToIPC<std_msgs::String>("t"); 
+    ipc.StopRelayTopicToIPC<std_msgs::String>("f"); 
 
     ipc.Disconnect();
 

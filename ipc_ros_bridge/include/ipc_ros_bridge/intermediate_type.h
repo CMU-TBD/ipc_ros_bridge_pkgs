@@ -10,6 +10,11 @@ class IntermediateType
 protected:
     std::string name;
     char* format;
+
+    void sendToIPC(void * data){
+        IPC_publishData(getName(), data);
+    }
+
 public:
 
     IntermediateType(const std::string _name, const char* _format):
@@ -19,13 +24,10 @@ public:
     }
 
     // For ROS -> IPC
-    virtual bool constructStructFromMessage(void* msg, void* &ptr) {};
+    virtual void publishData(void* msg) {};
     // For IPC -> ROS
     virtual M ContainerToMessage(void* container) {};
     
-    // Removed the generate object in construct
-    virtual void publishData(void* msg) {};
-
     char* getName(){
         return &name[0];
     }
@@ -33,6 +35,4 @@ public:
     char* getFormatString(){
         return format;
     }
-
-    
 };
