@@ -5,6 +5,10 @@
 ## Known Issues:
 1. Our implementation does not support the `query/response` design.
 
+## [0.3.1] - 2021-01-21
+- **[Fixed]** The CMAKELIST now puts in the correct kernal version.
+- **[Fixed]** Change virtual function to pure virtual function to prevent warnings.
+
 ## [0.3.0] - 2020-04-28
 #### Added
 - Added definitions for `geometer_msgs::Point`, `geometer_msgs::Quaternion`, and `geometer_msgs::Pose`.

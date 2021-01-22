@@ -24,9 +24,9 @@ public:
     }
 
     // For ROS -> IPC
-    virtual void publishData(void* msg) {};
+    virtual void publishData(void* msg) = 0;
     // For IPC -> ROS
-    virtual M ContainerToMessage(void* container) {};
+    virtual M ContainerToMessage(void* container) = 0;
     
     char* getName(){
         return &name[0];

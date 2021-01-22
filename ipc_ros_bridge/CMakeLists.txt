@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(ipc_ros_bridge)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
@@ -11,6 +11,10 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
 )
 
+## From: https://gist.github.com/armatusmiles/0bb94e906fc116f14a5f5060b2e6ef93
+execute_process(COMMAND uname -r OUTPUT_VARIABLE UNAME_RESULT OUTPUT_STRIP_TRAILING_WHITESPACE)
+string(REGEX MATCH "[0-9]+.[0-9]+" LINUX_KERNEL_VERSION ${UNAME_RESULT})
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -18,13 +22,13 @@ find_package(catkin REQUIRED COMPONENTS
 IF(DEFINED $ENV{IPC_DIR})
     SET(IPC_DIRECTORY $ENV{IPC_DIR})
 ELSE()
-    set(IPC_DIRECTORY $ENV{HOME}/Dev/robobuild/external/ipc)
+    set(IPC_DIRECTORY $ENV{HOME}/Dev/robocept/external/ipc)
 ENDIF()
 # SET static library path
 IF(DEFINED $ENV{IPC_LIB_PATH})
     SET(IPC_LIB_PATH $ENV{IPC_LIB_PATH})
 ELSE()
-    set(IPC_LIB_PATH ${IPC_DIRECTORY}/lib/Linux-5.3/libipc.a)
+    set(IPC_LIB_PATH ${IPC_DIRECTORY}/lib/Linux-${LINUX_KERNEL_VERSION}/libipc.a)
 ENDIF()
 
 
