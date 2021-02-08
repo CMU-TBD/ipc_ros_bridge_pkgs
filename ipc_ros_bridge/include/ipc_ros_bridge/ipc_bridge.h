@@ -162,7 +162,7 @@ public:
     {
       ReceiveOps<M> *ops = static_cast<ReceiveOps<M> *>(result->second);
       // unsubscribe from IPC
-      IPC_unsubscribe(ops->t->getName(), callback<M>);
+      IPC_unsubscribe(ops->t->getName(), StaticCallback<M>);
       // delete/free the instance
       delete ops->t;
       opsMap.erase(callbackName);
@@ -193,18 +193,18 @@ public:
   }
 
   template <class M>
-  static void callback(MSG_INSTANCE msgRef, BYTE_ARRAY callData, void *clientData)
+  static void StaticCallback(MSG_INSTANCE msgRef, void* callData, void *clientData)
   {
     ReceiveOps<M> *ops = (ReceiveOps<M> *)clientData;
     ops->callback(ops->t->ContainerToMessage(callData));
     // Free the data
-    IPC_freeByteArray(callData);
+    IPC_freeData(IPC_msgInstanceFormatter(msgRef), callData);
   }
 
   template <class M>
   static void ReceiveTopicFromIPCStatic(ReceiveOps<M> *ops)
   {
     // subscribe to it
-    IPC_subscribeData(ops->t->getName(), callback<M>, ops);
+    IPC_subscribeData(ops->t->getName(), StaticCallback<M>, ops);
   }
 };
