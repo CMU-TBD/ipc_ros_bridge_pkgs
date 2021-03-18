@@ -101,13 +101,13 @@ public:
   }
 
   template <class M, class T>
-  void ReceiveTopicFromIPC(std::string ipcMsgName, std::function<void(M)> callback)
+  void ReceiveTopicFromIPC(std::string ipcMsgName, std::function<void(M)> callback, int queueSize = 1)
   {
-    ReceiveTopicFromIPC<M, T>(ipcMsgName, callback, ipcMsgName);
+    ReceiveTopicFromIPC<M, T>(ipcMsgName, callback, ipcMsgName, queueSize);
   }
 
   template <class M, class T>
-  void ReceiveTopicFromIPC(std::string ipcMsgName, std::function<void(M)> callback, std::string callbackName)
+  void ReceiveTopicFromIPC(std::string ipcMsgName, std::function<void(M)> callback, std::string callbackName, int queueSize = 1)
   {
     if (!connected){
       ROS_WARN("Attempt to ReceiveTopicFromIPC when IPC is not connected");
@@ -118,6 +118,8 @@ public:
     IntermediateType<M> *t = new T(ipcMsgName);
     // define and register message
     IPC_defineMsg(t->getName(), IPC_VARIABLE_LENGTH, t->getFormatString());
+    // Set the message queue size
+    IPC_setMsgQueueLength(t->getName(), queueSize);
 
     // create the publishing ops
     ReceiveOps<M> *ops = new ReceiveOps<M>();
@@ -133,14 +135,14 @@ public:
 
 
   template <class M, class T>
-  void RelayTopicFromIPC(std::string ipcMsgName, std::string rosTopicName)
+  void RelayTopicFromIPC(std::string ipcMsgName, std::string rosTopicName, int queueSize = 1)
   {
     if (!connected){
       ROS_WARN("Attempt to RelayTopicFromIPC when IPC is not connected");
       return;
     }
     // create publisher
-    ros::Publisher pub = nh.advertise<M>(rosTopicName, 1);
+    ros::Publisher pub = nh.advertise<M>(rosTopicName, queueSize);
     pubMap.insert(std::make_pair(rosTopicName, pub));
 
     // create a lambda function that publish it
@@ -150,7 +152,7 @@ public:
       pub.publish(msg);
     };
 
-    ReceiveTopicFromIPC<M, T>(ipcMsgName, pubCallback, rosTopicName);
+    ReceiveTopicFromIPC<M, T>(ipcMsgName, pubCallback, rosTopicName, queueSize);
   }
 
   template <class M>

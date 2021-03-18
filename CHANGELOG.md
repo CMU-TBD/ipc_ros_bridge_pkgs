@@ -5,6 +5,9 @@
 ## Known Issues:
 1. Our implementation does not support the `query/response` design.
 
+## [0.3.3] - 2021-03-18
+- **[Added]** queue sizes to relays. The default is 1 which is instant.
+
 ## [0.3.2] - 2021-02-08
 - **[Fixed]** struct not being recycled correctly in subscribe messages.
 
